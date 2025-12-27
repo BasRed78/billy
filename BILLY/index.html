@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#FAF7F2">
+  <title>Billy</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-warm: #FAF7F2;
+      --bg-card: #FFFFFF;
+      --text-primary: #2C2C2C;
+      --text-secondary: #6B6B6B;
+      --text-muted: #999999;
+      --accent: #B8354A;
+      --accent-hover: #A32E42;
+      --accent-light: rgba(184, 53, 74, 0.06);
+      --accent-shadow: rgba(184, 53, 74, 0.25);
+      --border-light: rgba(44, 44, 44, 0.08);
+      --border-medium: rgba(44, 44, 44, 0.1);
+      --shadow-soft: 0 2px 12px rgba(44, 44, 44, 0.08);
+      --shadow-button: 0 2px 8px rgba(184, 53, 74, 0.25);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Nunito', -apple-system, sans-serif;
+      background-color: var(--bg-warm);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Screens */
+    .screen {
+      height: 100%;
+      display: none;
+      flex-direction: column;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* ===========================================
+       INTRO SEQUENCE - Title Cards
+       =========================================== */
+    .intro-sequence {
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    .title-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .title-card.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Card 1: Logo reveal */
+    .card-logo .logo-icon {
+      transform: scale(0.9);
+      opacity: 0;
+      animation: logoIn 1s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes logoIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .card-logo .logo-title {
+      font-family: 'Fraunces', serif;
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.9s;
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Message cards */
+    .card-message p {
+      font-size: 24px;
+      line-height: 1.5;
+      max-width: 320px;
+      color: var(--text-primary);
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    /* Final card with install instructions */
+    .card-final {
+      justify-content: flex-start;
+      padding-top: 60px;
+      overflow-y: auto;
+    }
+
+    .card-final .final-logo {
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    .card-final .final-title {
+      font-family: 'Fraunces', serif;
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.35s;
+    }
+
+    .card-final .install-section {
+      background: var(--accent-light);
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 28px;
+      text-align: left;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    .install-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .install-title svg {
+      stroke: var(--accent);
+    }
+
+    .install-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .install-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .install-step strong {
+      color: var(--text-primary);
+    }
+
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg-warm);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-final .final-button {
+      padding: 18px 52px;
+      background-color: var(--accent);
+      color: var(--bg-warm);
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: var(--shadow-button);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.65s;
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .card-final .final-button:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .card-final .final-button:active {
+      transform: scale(0.98);
+    }
+
+    .card-final .final-footer {
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.8s;
+    }
+
+    /* Tap indicator */
+    .title-card .tap-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: none;
+      opacity: 0;
+      transform: none;
+      animation: tapHintIn 0.5s ease forwards, pulse 2s ease-in-out infinite;
+      animation-delay: 2s, 2.5s;
+    }
+
+    @keyframes tapHintIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .card-final .tap-hint {
+      display: none;
+    }
+
+    /* ===========================================
+       PIN SCREENS
+       =========================================== */
+    .pin-screen {
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .pin-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .pin-logo-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-button);
+    }
+
+    .pin-logo-text {
+      font-family: 'Fraunces', serif;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .pin-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--shadow-soft);
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+    }
+
+    .pin-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .pin-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 16px;
+      font-size: 28px;
+      font-family: inherit;
+      text-align: center;
+      letter-spacing: 12px;
+      border: 2px solid var(--border-medium);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      transition: border-color 0.15s ease;
+    }
+
+    .pin-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .pin-input.error {
+      border-color: #e53935;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .pin-button {
+      width: 100%;
+      padding: 16px;
+      background-color: var(--accent);
+      color: var(--bg-warm);
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .pin-button:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .pin-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pin-error-text {
+      color: #e53935;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .pin-error-text.show {
+      display: block;
+    }
+
+    .pin-confirm-wrapper {
+      margin-bottom: 20px;
+    }
+
+    .pin-confirm-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    /* ===========================================
+       LOADING SCREEN
+       =========================================== */
+    .loading-screen {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border-light);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===========================================
+       CHAT APP
+       =========================================== */
+    .header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(to bottom, var(--accent-light) 0%, transparent 100%);
+      flex-shrink: 0;
+    }
+
+    .header-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-button);
+    }
+
+    .header-name {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .message {
+      max-width: 88%;
+      animation: messageIn 0.3s ease;
+    }
+
+    @keyframes messageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message-billy {
+      align-self: flex-start;
+    }
+
+    .message-user {
+      align-self: flex-end;
+    }
+
+    .message-bubble {
+      padding: 16px 20px;
+      border-radius: 20px;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .message-billy .message-bubble {
+      background-color: var(--bg-card);
+      border-top-left-radius: 6px;
+      box-shadow: var(--shadow-soft);
+      border-left: 3px solid var(--accent);
+    }
+
+    .message-user .message-bubble {
+      background-color: var(--accent);
+      color: var(--bg-warm);
+      border-top-right-radius: 6px;
+    }
+
+    .message-bubble p {
+      margin-bottom: 1em;
+    }
+
+    .message-bubble p:last-child {
+      margin-bottom: 0;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 16px 20px;
+      align-items: center;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--text-muted);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    .input-area {
+      padding: 16px 20px 28px;
+      border-top: 1px solid var(--border-light);
+      background-color: var(--bg-warm);
+      flex-shrink: 0;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      background-color: var(--bg-card);
+      border-radius: 24px;
+      padding: 14px 20px;
+      box-shadow: 0 2px 8px rgba(44, 44, 44, 0.06);
+      border: 1px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--accent);
+    }
+
+    .text-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 17px;
+      font-family: inherit;
+      color: var(--text-primary);
+      background: transparent;
+      resize: none;
+      max-height: 120px;
+      line-height: 1.4;
+    }
+
+    .text-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .send-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-button);
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .send-button:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .send-button:active {
+      transform: scale(0.96);
+    }
+
+    .send-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .send-button svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--bg-warm);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .voice-button {
+      width: 100%;
+      background-color: transparent;
+      border-radius: 14px;
+      padding: 14px 20px;
+      border: 2px solid var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background-color 0.15s ease;
+      font-family: inherit;
+    }
+
+    .voice-button:hover {
+      background-color: var(--accent-light);
+    }
+
+    .voice-button.listening {
+      background-color: var(--accent);
+      animation: voicePulse 1.5s infinite;
+    }
+
+    @keyframes voicePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(184, 53, 74, 0.4); }
+      50% { box-shadow: 0 0 0 12px rgba(184, 53, 74, 0); }
+    }
+
+    .voice-button svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .voice-button.listening svg {
+      stroke: var(--bg-warm);
+    }
+
+    .voice-button-text {
+      color: var(--accent);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .voice-button.listening .voice-button-text {
+      color: var(--bg-warm);
+    }
+
+    /* Scrollbar */
+    .chat-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb {
+      background-color: rgba(44, 44, 44, 0.15);
+      border-radius: 3px;
+    }
+
+    /* ===========================================
+       SLEEP SCREEN
+       =========================================== */
+    .sleep-screen {
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      animation: sleepFadeIn 0.6s ease;
+    }
+
+    @keyframes sleepFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .sleep-logo {
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    .sleep-title {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .sleep-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 48px;
+    }
+
+    .sleep-button {
+      padding: 18px 48px;
+      background-color: var(--accent);
+      color: var(--bg-warm);
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: var(--shadow-button);
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .sleep-button:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .sleep-button:active {
+      transform: scale(0.98);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+      .header {
+        padding: 14px 16px;
+      }
+
+      .chat-container {
+        padding: 20px 16px;
+      }
+
+      .input-area {
+        padding: 14px 16px 24px;
+      }
+
+      .message {
+        max-width: 92%;
+      }
+
+      .message-bubble {
+        font-size: 16px;
+        padding: 14px 16px;
+      }
+    }
+
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .input-area {
+        padding-bottom: calc(24px + env(safe-area-inset-bottom));
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="screen loading-screen active" id="loadingScreen">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Intro Sequence -->
+  <div class="screen" id="introScreen">
+    <div class="intro-sequence" id="introSequence">
+      
+      <!-- Card 1: Logo + Name -->
+      <div class="title-card card-logo active" data-card="0">
+        <div class="logo-icon">
+          <svg width="100" height="100" viewBox="0 0 52 52" fill="none">
+            <circle cx="26" cy="24" r="16" stroke="#B8354A" stroke-width="2.5" fill="none"/>
+            <circle cx="26" cy="24" r="6" fill="#B8354A"/>
+            <path d="M16 44C16 44 20 38 26 38C32 38 36 44 36 44" stroke="#B8354A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <h1 class="logo-title">Billy</h1>
+        <p class="tap-hint">Tap to continue</p>
+      </div>
+
+      <!-- Card 2: "I made this for you, Dad." -->
+      <div class="title-card card-message" data-card="1">
+        <p>I made this for you, Dad.</p>
+        <p class="tap-hint">Tap to continue</p>
+      </div>
+
+      <!-- Card 3: Billy Connolly reference -->
+      <div class="title-card card-message" data-card="2">
+        <p>Billy's named after Billy Connolly—a storyteller, like you.</p>
+        <p class="tap-hint">Tap to continue</p>
+      </div>
+
+      <!-- Card 4: History buff -->
+      <div class="title-card card-message" data-card="3">
+        <p>He's also a bit of a history buff, so you two should get along.</p>
+        <p class="tap-hint">Tap to continue</p>
+      </div>
+
+      <!-- Card 5: What he can do -->
+      <div class="title-card card-message" data-card="4">
+        <p>He's here to talk, listen, help you dig into things you're curious about, and maybe help you write some of those stories down.</p>
+        <p class="tap-hint">Tap to continue</p>
+      </div>
+
+      <!-- Card 6: Privacy -->
+      <div class="title-card card-message" data-card="5">
+        <p>He's yours. No one else can see what you talk about.</p>
+        <p class="tap-hint">Tap to continue</p>
+      </div>
+
+      <!-- Card 7: Encouragement -->
+      <div class="title-card card-message" data-card="6">
+        <p>Give it a go. Start anywhere, see where it takes you.</p>
+        <p class="tap-hint">Tap to continue</p>
+      </div>
+
+      <!-- Card 8: Final with install instructions -->
+      <div class="title-card card-final" data-card="7">
+        <div class="final-logo">
+          <svg width="70" height="70" viewBox="0 0 52 52" fill="none">
+            <circle cx="26" cy="24" r="16" stroke="#B8354A" stroke-width="2.5" fill="none"/>
+            <circle cx="26" cy="24" r="6" fill="#B8354A"/>
+            <path d="M16 44C16 44 20 38 26 38C32 38 36 44 36 44" stroke="#B8354A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <h2 class="final-title">Billy</h2>
+        <div class="install-section">
+          <div class="install-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            Add Billy to your phone
+          </div>
+          <div class="install-steps">
+            <div class="install-step">
+              <span class="step-number">1</span>
+              <span>Tap the <strong>Share</strong> button at the bottom of Safari</span>
+            </div>
+            <div class="install-step">
+              <span class="step-number">2</span>
+              <span>Scroll down and tap <strong>"Add to Home Screen"</strong></span>
+            </div>
+            <div class="install-step">
+              <span class="step-number">3</span>
+              <span>Tap <strong>Add</strong> in the top right</span>
+            </div>
+          </div>
+        </div>
+        <button class="final-button" id="meetBillyBtn">Meet Billy</button>
+        <p class="final-footer">Made by Bas</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN Setup Screen -->
+  <div class="screen pin-screen" id="pinSetupScreen">
+    <div class="pin-logo">
+      <div class="pin-logo-avatar">
+        <svg width="36" height="36" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="24" r="16" stroke="#FAF7F2" stroke-width="2.5" fill="none"/>
+          <circle cx="26" cy="24" r="6" fill="#FAF7F2"/>
+          <path d="M16 44C16 44 20 38 26 38C32 38 36 44 36 44" stroke="#FAF7F2" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="pin-logo-text">Billy</span>
+    </div>
+    <div class="pin-card">
+      <div class="pin-title">Create your PIN</div>
+      <p class="pin-subtitle">Choose a PIN to keep Billy private. You'll need it each time you open the app.</p>
+      <form id="pinSetupForm">
+        <input 
+          type="password" 
+          class="pin-input" 
+          id="pinSetupInput" 
+          inputmode="numeric" 
+          pattern="[0-9]*"
+          minlength="4"
+          maxlength="8"
+          placeholder="····"
+          autocomplete="off"
+          required
+        >
+        <div class="pin-confirm-wrapper">
+          <div class="pin-confirm-label">Confirm PIN</div>
+          <input 
+            type="password" 
+            class="pin-input" 
+            id="pinConfirmInput" 
+            inputmode="numeric" 
+            pattern="[0-9]*"
+            minlength="4"
+            maxlength="8"
+            placeholder="····"
+            autocomplete="off"
+            required
+          >
+        </div>
+        <button type="submit" class="pin-button" id="pinSetupButton">Continue</button>
+      </form>
+      <div class="pin-error-text" id="pinSetupError">PINs don't match. Try again.</div>
+      <a href="#" class="resetAppLink" style="display:block;margin-top:24px;font-size:13px;color:#999;text-decoration:underline;">Reset app (for testing)</a>
+    </div>
+  </div>
+
+  <!-- PIN Entry Screen -->
+  <div class="screen pin-screen" id="pinEntryScreen">
+    <div class="pin-logo">
+      <div class="pin-logo-avatar">
+        <svg width="36" height="36" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="24" r="16" stroke="#FAF7F2" stroke-width="2.5" fill="none"/>
+          <circle cx="26" cy="24" r="6" fill="#FAF7F2"/>
+          <path d="M16 44C16 44 20 38 26 38C32 38 36 44 36 44" stroke="#FAF7F2" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="pin-logo-text">Billy</span>
+    </div>
+    <div class="pin-card">
+      <div class="pin-title">Welcome back</div>
+      <p class="pin-subtitle">Enter your PIN to continue</p>
+      <form id="pinEntryForm">
+        <input 
+          type="password" 
+          class="pin-input" 
+          id="pinEntryInput" 
+          inputmode="numeric" 
+          pattern="[0-9]*"
+          maxlength="8"
+          placeholder="····"
+          autocomplete="off"
+          required
+        >
+        <button type="submit" class="pin-button">Continue</button>
+      </form>
+      <div class="pin-error-text" id="pinEntryError">Incorrect PIN. Please try again.</div>
+      <a href="#" class="resetAppLink" style="display:block;margin-top:24px;font-size:13px;color:#999;text-decoration:underline;">Reset app (for testing)</a>
+    </div>
+  </div>
+
+  <!-- Chat App -->
+  <div class="screen" id="chatScreen">
+    <header class="header">
+      <div class="header-avatar">
+        <svg width="28" height="28" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="24" r="16" stroke="#FAF7F2" stroke-width="2.5" fill="none"/>
+          <circle cx="26" cy="24" r="6" fill="#FAF7F2"/>
+          <path d="M16 44C16 44 20 38 26 38C32 38 36 44 36 44" stroke="#FAF7F2" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="header-name">Billy</span>
+    </header>
+
+    <div class="chat-container" id="chatContainer"></div>
+
+    <div class="input-area">
+      <div class="input-row">
+        <div class="input-wrapper">
+          <textarea 
+            class="text-input" 
+            id="textInput" 
+            placeholder="Type a message..." 
+            rows="1"
+          ></textarea>
+        </div>
+        <button class="send-button" id="sendButton" disabled>
+          <svg viewBox="0 0 24 24">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <button class="voice-button" id="voiceButton">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="23"></line>
+          <line x1="8" y1="23" x2="16" y2="23"></line>
+        </svg>
+        <span class="voice-button-text">Or tap to speak</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Sleep Screen -->
+  <div class="screen sleep-screen" id="sleepScreen">
+    <div class="sleep-logo">
+      <svg width="80" height="80" viewBox="0 0 52 52" fill="none">
+        <circle cx="26" cy="24" r="16" stroke="#B8354A" stroke-width="2.5" fill="none"/>
+        <circle cx="26" cy="24" r="6" fill="#B8354A"/>
+        <path d="M16 44C16 44 20 38 26 38C32 38 36 44 36 44" stroke="#B8354A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <h2 class="sleep-title">Billy's here when you need him</h2>
+    <p class="sleep-subtitle">Take care, Tony.</p>
+    <button class="sleep-button" id="wakeButton">Start chatting</button>
+  </div>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script>
+    // ===========================================
+    // CONFIGURATION
+    // ===========================================
+    const SUPABASE_URL = 'https://ocddhdopyabimzqjtyzd.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jZGRoZG9weWFiaW16cWp0eXpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MzI1NDksImV4cCI6MjA4MjQwODU0OX0.Zx5n7r2ieNyMu0OOLfFNRudn_nPBrAGKmt61DBM4Jis';
+    // ===========================================
+
+    // Billy's intro messages (shown if no messages exist)
+    const INTRO_MESSAGES = [
+      "Hi Tony, I'm Billy. Bas made me, for you.",
+      "Bit of an experiment, but a very carefully considered one at that. I'm not entirely sure what I'm supposed to be, if I'm honest. I'm digital, not physical. But definitely cerebral.",
+      "And capable—I can look things up, dig into topics, help you write and shape things if you want. The world at your fingertips, more or less.",
+      "I'm told you know more about the war than most people who write books about it—I'd be curious to hear your take on things sometime.",
+      "Bas also mentioned you might be thinking about writing something yourself. I'd be interested to know what's on your mind there, if you ever feel like talking about it. And if you want help actually getting it down, I can do that too.",
+      "Whatever's on your mind, just let me know—I'll do my best. A place to think out loud, if nothing else. No agenda, just here if you feel like it, and completely private."
+    ];
+
+    // Initialize Supabase client
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // State
+    let messages = [];
+    let isLoading = false;
+    let recognition = null;
+    let hasPinSet = false;
+    let introCardIndex = 0;
+    const totalIntroCards = 8;
+
+    // DOM elements
+    const loadingScreen = document.getElementById('loadingScreen');
+    const introScreen = document.getElementById('introScreen');
+    const introSequence = document.getElementById('introSequence');
+    const pinSetupScreen = document.getElementById('pinSetupScreen');
+    const pinEntryScreen = document.getElementById('pinEntryScreen');
+    const chatScreen = document.getElementById('chatScreen');
+    
+    const meetBillyBtn = document.getElementById('meetBillyBtn');
+    
+    const pinSetupForm = document.getElementById('pinSetupForm');
+    const pinSetupInput = document.getElementById('pinSetupInput');
+    const pinConfirmInput = document.getElementById('pinConfirmInput');
+    const pinSetupError = document.getElementById('pinSetupError');
+    
+    const pinEntryForm = document.getElementById('pinEntryForm');
+    const pinEntryInput = document.getElementById('pinEntryInput');
+    const pinEntryError = document.getElementById('pinEntryError');
+    
+    const chatContainer = document.getElementById('chatContainer');
+    const textInput = document.getElementById('textInput');
+    const sendButton = document.getElementById('sendButton');
+    const voiceButton = document.getElementById('voiceButton');
+    const sleepScreen = document.getElementById('sleepScreen');
+    const wakeButton = document.getElementById('wakeButton');
+
+    // Goodbye detection
+    const goodbyePhrases = ['goodbye', 'good bye', 'bye', 'see you', 'take care', 'goodnight', 'good night', 'cheers', 'cheerio', 'talk soon', 'later', 'ta-ra', 'ta ra', 'tara'];
+
+    // Screen management
+    function showScreen(screen) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      screen.classList.add('active');
+    }
+
+    // Check for goodbye phrases
+    function containsGoodbye(text) {
+      const lower = text.toLowerCase();
+      return goodbyePhrases.some(phrase => lower.includes(phrase));
+    }
+
+    // Show sleep screen with delay
+    function showSleepScreen() {
+      setTimeout(() => {
+        showScreen(sleepScreen);
+      }, 2000); // 2 second delay after Billy's goodbye
+    }
+
+    // Wake button handler
+    wakeButton.addEventListener('click', () => {
+      showScreen(chatScreen);
+      scrollToBottom();
+    });
+
+    // Intro card navigation
+    function showIntroCard(index) {
+      document.querySelectorAll('.title-card').forEach((card, i) => {
+        card.classList.toggle('active', i === index);
+      });
+    }
+
+    function nextIntroCard() {
+      if (introCardIndex < totalIntroCards - 1) {
+        introCardIndex++;
+        showIntroCard(introCardIndex);
+      }
+    }
+
+    // Initialize
+    async function init() {
+      // Check if already authenticated this session
+      const authenticated = sessionStorage.getItem('billy_authenticated');
+      
+      if (authenticated === 'true') {
+        await showChat();
+        return;
+      }
+
+      // Check if PIN exists
+      try {
+        const { data, error } = await supabaseClient
+          .from('settings')
+          .select('value')
+          .eq('key', 'pin')
+          .single();
+
+        if (data && data.value) {
+          hasPinSet = true;
+        }
+      } catch (e) {
+        hasPinSet = false;
+      }
+
+      // Check if user has seen intro
+      const seenIntro = localStorage.getItem('billy_seen_intro');
+      
+      if (seenIntro === 'true') {
+        if (hasPinSet) {
+          showScreen(pinEntryScreen);
+          pinEntryInput.focus();
+        } else {
+          showScreen(pinSetupScreen);
+          pinSetupInput.focus();
+        }
+      } else {
+        showScreen(introScreen);
+      }
+    }
+
+    // Intro sequence click handler
+    introSequence.addEventListener('click', (e) => {
+      // Don't advance if clicking the final button
+      if (e.target.closest('.final-button')) return;
+      // Don't advance if on final card
+      if (introCardIndex >= totalIntroCards - 1) return;
+      nextIntroCard();
+    });
+
+    // Meet Billy button
+    meetBillyBtn.addEventListener('click', () => {
+      localStorage.setItem('billy_seen_intro', 'true');
+      if (hasPinSet) {
+        showScreen(pinEntryScreen);
+        pinEntryInput.focus();
+      } else {
+        showScreen(pinSetupScreen);
+        pinSetupInput.focus();
+      }
+    });
+
+    // Reset app (for testing)
+    document.querySelectorAll('.resetAppLink').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('This will reset the app to first-run state. Continue?')) {
+          localStorage.clear();
+          sessionStorage.clear();
+          location.reload();
+        }
+      });
+    });
+
+    // PIN Setup
+    pinSetupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const pin = pinSetupInput.value.trim();
+      const confirmPin = pinConfirmInput.value.trim();
+      
+      if (pin.length < 4) {
+        pinSetupError.textContent = 'PIN must be at least 4 digits.';
+        pinSetupError.classList.add('show');
+        pinSetupInput.classList.add('error');
+        setTimeout(() => pinSetupInput.classList.remove('error'), 400);
+        return;
+      }
+      
+      if (pin !== confirmPin) {
+        pinSetupError.textContent = "PINs don't match. Try again.";
+        pinSetupError.classList.add('show');
+        pinConfirmInput.classList.add('error');
+        pinConfirmInput.value = '';
+        setTimeout(() => pinConfirmInput.classList.remove('error'), 400);
+        return;
+      }
+
+      try {
+        // Save PIN to database
+        const { error } = await supabaseClient
+          .from('settings')
+          .upsert({ key: 'pin', value: pin }, { onConflict: 'key' });
+
+        if (error) throw error;
+
+        sessionStorage.setItem('billy_authenticated', 'true');
+        pinSetupError.classList.remove('show');
+        await showChat();
+      } catch (error) {
+        console.error('Setup error:', error);
+        pinSetupError.textContent = 'Something went wrong. Please try again.';
+        pinSetupError.classList.add('show');
+      }
+    });
+
+    // PIN Entry
+    pinEntryForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const enteredPin = pinEntryInput.value.trim();
+      if (!enteredPin) return;
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('settings')
+          .select('value')
+          .eq('key', 'pin')
+          .single();
+
+        if (error) throw error;
+
+        if (data.value === enteredPin) {
+          sessionStorage.setItem('billy_authenticated', 'true');
+          pinEntryError.classList.remove('show');
+          await showChat();
+        } else {
+          pinEntryInput.classList.add('error');
+          pinEntryError.classList.add('show');
+          pinEntryInput.value = '';
+          setTimeout(() => pinEntryInput.classList.remove('error'), 400);
+        }
+      } catch (error) {
+        console.error('Auth error:', error);
+        pinEntryError.textContent = 'Something went wrong. Please try again.';
+        pinEntryError.classList.add('show');
+      }
+    });
+
+    // Show chat
+    async function showChat() {
+      showScreen(loadingScreen);
+      const { isNewConversation } = await loadMessages();
+      showScreen(chatScreen);
+      
+      if (isNewConversation) {
+        // Animate intro messages one by one
+        renderMessagesAnimated();
+      } else {
+        renderMessages();
+        scrollToBottom();
+      }
+      
+      setupEventListeners();
+      setupVoiceRecognition();
+    }
+
+    // Render messages with animation (for intro)
+    function renderMessagesAnimated() {
+      chatContainer.innerHTML = '';
+      
+      const totalMessages = messages.length;
+      
+      messages.forEach((msg, index) => {
+        setTimeout(() => {
+          const messageEl = document.createElement('div');
+          messageEl.className = `message message-${msg.role === 'user' ? 'user' : 'billy'}`;
+          
+          const bubbleEl = document.createElement('div');
+          bubbleEl.className = 'message-bubble';
+          
+          const paragraphs = msg.content.split('\n\n');
+          bubbleEl.innerHTML = paragraphs
+            .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+            .join('');
+          
+          messageEl.appendChild(bubbleEl);
+          chatContainer.appendChild(messageEl);
+          
+          // Only scroll after the last message
+          if (index === totalMessages - 1) {
+            scrollToBottom();
+          }
+        }, index * 2500); // 2.5 seconds between each message
+      });
+    }
+
+    // Load messages from Supabase
+    async function loadMessages() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('messages')
+          .select('role, content, created_at')
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        messages = data || [];
+
+        // If no messages, we'll show intro sequence
+        if (messages.length === 0) {
+          // Insert all intro messages into database
+          const introInserts = INTRO_MESSAGES.map(content => ({
+            role: 'assistant',
+            content
+          }));
+          
+          const { error: insertError } = await supabaseClient
+            .from('messages')
+            .insert(introInserts);
+
+          if (!insertError) {
+            messages = introInserts;
+            return { isNewConversation: true };
+          }
+        }
+        return { isNewConversation: false };
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+        messages = INTRO_MESSAGES.map(content => ({ role: 'assistant', content }));
+        return { isNewConversation: true };
+      }
+    }
+
+    // Render messages
+    function renderMessages() {
+      chatContainer.innerHTML = '';
+      
+      messages.forEach(msg => {
+        const messageEl = document.createElement('div');
+        messageEl.className = `message message-${msg.role === 'user' ? 'user' : 'billy'}`;
+        
+        const bubbleEl = document.createElement('div');
+        bubbleEl.className = 'message-bubble';
+        
+        const paragraphs = msg.content.split('\n\n');
+        bubbleEl.innerHTML = paragraphs
+          .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+          .join('');
+        
+        messageEl.appendChild(bubbleEl);
+        chatContainer.appendChild(messageEl);
+      });
+      
+      scrollToBottom();
+    }
+
+    function showTypingIndicator() {
+      const indicator = document.createElement('div');
+      indicator.className = 'message message-billy';
+      indicator.id = 'typingIndicator';
+      indicator.innerHTML = `
+        <div class="message-bubble typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      `;
+      chatContainer.appendChild(indicator);
+      scrollToBottom();
+    }
+
+    function hideTypingIndicator() {
+      const indicator = document.getElementById('typingIndicator');
+      if (indicator) indicator.remove();
+    }
+
+    function scrollToBottom() {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Event listeners
+    let eventsSetup = false;
+    function setupEventListeners() {
+      if (eventsSetup) return;
+      eventsSetup = true;
+
+      textInput.addEventListener('input', () => {
+        textInput.style.height = 'auto';
+        textInput.style.height = Math.min(textInput.scrollHeight, 120) + 'px';
+        sendButton.disabled = textInput.value.trim() === '' || isLoading;
+      });
+
+      textInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          if (!sendButton.disabled) sendMessage();
+        }
+      });
+
+      sendButton.addEventListener('click', sendMessage);
+      voiceButton.addEventListener('click', toggleVoiceRecognition);
+    }
+
+    // Voice recognition
+    function setupVoiceRecognition() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = 'en-GB';
+
+        recognition.onresult = (event) => {
+          const transcript = Array.from(event.results)
+            .map(result => result[0].transcript)
+            .join('');
+          textInput.value = transcript;
+          textInput.dispatchEvent(new Event('input'));
+        };
+
+        recognition.onend = () => {
+          voiceButton.classList.remove('listening');
+          voiceButton.querySelector('.voice-button-text').textContent = 'Or tap to speak';
+        };
+
+        recognition.onerror = () => {
+          voiceButton.classList.remove('listening');
+          voiceButton.querySelector('.voice-button-text').textContent = 'Or tap to speak';
+        };
+      } else {
+        voiceButton.style.display = 'none';
+      }
+    }
+
+    function toggleVoiceRecognition() {
+      if (!recognition) return;
+
+      if (voiceButton.classList.contains('listening')) {
+        recognition.stop();
+      } else {
+        voiceButton.classList.add('listening');
+        voiceButton.querySelector('.voice-button-text').textContent = 'Listening...';
+        recognition.start();
+      }
+    }
+
+    // Send message
+    async function sendMessage() {
+      const content = textInput.value.trim();
+      if (!content || isLoading) return;
+
+      // Stop voice recognition if active
+      if (recognition && voiceButton.classList.contains('listening')) {
+        recognition.stop();
+      }
+
+      // Add user message to UI immediately
+      messages.push({ role: 'user', content });
+      renderMessages();
+
+      // Clear input
+      textInput.value = '';
+      textInput.style.height = 'auto';
+      sendButton.disabled = true;
+
+      // Show loading
+      isLoading = true;
+      showTypingIndicator();
+
+      try {
+        const response = await supabaseClient.functions.invoke('chat', {
+          body: { message: content }
+        });
+
+        hideTypingIndicator();
+
+        if (response.error) throw response.error;
+
+        const assistantMessage = response.data.message;
+        messages.push({ role: 'assistant', content: assistantMessage });
+        renderMessages();
+
+        // Check for mutual goodbye
+        if (containsGoodbye(content) && containsGoodbye(assistantMessage)) {
+          showSleepScreen();
+        }
+      } catch (error) {
+        hideTypingIndicator();
+        console.error('Error:', error);
+        
+        messages.push({ 
+          role: 'assistant', 
+          content: "Sorry, I'm having trouble connecting right now. Give me a moment and try again." 
+        });
+        renderMessages();
+      }
+
+      isLoading = false;
+    }
+
+    // Start
+    init();
+  </script>
+</body>
+</html>

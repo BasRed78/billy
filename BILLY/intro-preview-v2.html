@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Billy - Intro Preview v2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-warm: #FAF7F2;
+      --text-primary: #2C2C2C;
+      --text-secondary: #6B6B6B;
+      --text-muted: #999999;
+      --accent: #B8354A;
+      --accent-hover: #A32E42;
+      --accent-light: rgba(184, 53, 74, 0.06);
+      --shadow-button: 0 2px 8px rgba(184, 53, 74, 0.25);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Nunito', -apple-system, sans-serif;
+      background-color: var(--bg-warm);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    /* Title card container */
+    .intro-sequence {
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Individual title cards */
+    .title-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    .title-card.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Card 1: Logo reveal */
+    .card-logo .logo-icon {
+      transform: scale(0.9);
+      opacity: 0;
+      animation: logoIn 1s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes logoIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .card-logo .logo-title {
+      font-family: 'Fraunces', serif;
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.9s;
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Message cards */
+    .card-message p {
+      font-size: 24px;
+      line-height: 1.5;
+      max-width: 320px;
+      color: var(--text-primary);
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    /* Final card with install instructions */
+    .card-final {
+      justify-content: flex-start;
+      padding-top: 60px;
+      overflow-y: auto;
+    }
+
+    .card-final .final-logo {
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    .card-final .final-title {
+      font-family: 'Fraunces', serif;
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.35s;
+    }
+
+    .card-final .install-section {
+      background: var(--accent-light);
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 28px;
+      text-align: left;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    .install-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .install-title svg {
+      stroke: var(--accent);
+    }
+
+    .install-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .install-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .install-step strong {
+      color: var(--text-primary);
+    }
+
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg-warm);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-final .final-button {
+      padding: 18px 52px;
+      background-color: var(--accent);
+      color: var(--bg-warm);
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: var(--shadow-button);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.65s;
+    }
+
+    .card-final .final-button:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .card-final .final-footer {
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      animation-delay: 0.8s;
+    }
+
+    /* Tap indicator */
+    .tap-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards, pulse 2s ease-in-out infinite;
+      animation-delay: 2s, 2.5s;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .card-final .tap-hint {
+      display: none;
+    }
+
+    /* Replay button for testing */
+    .replay-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      background: #2C2C2C;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .replay-button:hover {
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="intro-sequence" id="introSequence">
+    
+    <!-- Card 1: Logo + Name -->
+    <div class="title-card card-logo active" data-card="0">
+      <div class="logo-icon">
+        <svg width="100" height="100" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="24" r="16" stroke="#B8354A" stroke-width="2.5" fill="none"/>
+          <circle cx="26" cy="24" r="6" fill="#B8354A"/>
+          <path d="M16 44C16 44 20 38 26 38C32 38 36 44 36 44" stroke="#B8354A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <h1 class="logo-title">Billy</h1>
+      <p class="tap-hint">Tap to continue</p>
+    </div>
+
+    <!-- Card 2: "I made this for you, Dad." -->
+    <div class="title-card card-message" data-card="1">
+      <p>I made this for you, Dad.</p>
+      <p class="tap-hint">Tap to continue</p>
+    </div>
+
+    <!-- Card 3: Billy Connolly reference -->
+    <div class="title-card card-message" data-card="2">
+      <p>Billy's named after Billy Connolly—a storyteller, like you.</p>
+      <p class="tap-hint">Tap to continue</p>
+    </div>
+
+    <!-- Card 4: History buff -->
+    <div class="title-card card-message" data-card="3">
+      <p>He's also a bit of a history buff, so you two should get along.</p>
+      <p class="tap-hint">Tap to continue</p>
+    </div>
+
+    <!-- Card 5: What he can do -->
+    <div class="title-card card-message" data-card="4">
+      <p>He's here to talk, listen, help you dig into things you're curious about, and maybe help you write some of those stories down.</p>
+      <p class="tap-hint">Tap to continue</p>
+    </div>
+
+    <!-- Card 6: Privacy -->
+    <div class="title-card card-message" data-card="5">
+      <p>He's yours. No one else can see what you talk about.</p>
+      <p class="tap-hint">Tap to continue</p>
+    </div>
+
+    <!-- Card 7: Encouragement -->
+    <div class="title-card card-message" data-card="6">
+      <p>Give it a go. Start anywhere, see where it takes you.</p>
+      <p class="tap-hint">Tap to continue</p>
+    </div>
+
+    <!-- Card 8: Final with install instructions -->
+    <div class="title-card card-final" data-card="7">
+      <div class="final-logo">
+        <svg width="70" height="70" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="24" r="16" stroke="#B8354A" stroke-width="2.5" fill="none"/>
+          <circle cx="26" cy="24" r="6" fill="#B8354A"/>
+          <path d="M16 44C16 44 20 38 26 38C32 38 36 44 36 44" stroke="#B8354A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <h2 class="final-title">Billy</h2>
+      <div class="install-section">
+        <div class="install-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+            <line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+          Add Billy to your phone
+        </div>
+        <div class="install-steps">
+          <div class="install-step">
+            <span class="step-number">1</span>
+            <span>Tap the <strong>Share</strong> button at the bottom of Safari</span>
+          </div>
+          <div class="install-step">
+            <span class="step-number">2</span>
+            <span>Scroll down and tap <strong>"Add to Home Screen"</strong></span>
+          </div>
+          <div class="install-step">
+            <span class="step-number">3</span>
+            <span>Tap <strong>Add</strong> in the top right</span>
+          </div>
+        </div>
+      </div>
+      <button class="final-button" id="meetBillyBtn">Meet Billy</button>
+      <p class="final-footer">Made by Bas</p>
+    </div>
+  </div>
+
+  <button class="replay-button" onclick="location.reload()">↻ Replay</button>
+
+  <script>
+    let currentCard = 0;
+    const totalCards = 8;
+    const sequence = document.getElementById('introSequence');
+    
+    function showCard(index) {
+      document.querySelectorAll('.title-card').forEach((card, i) => {
+        card.classList.toggle('active', i === index);
+      });
+    }
+
+    function nextCard() {
+      if (currentCard < totalCards - 1) {
+        currentCard++;
+        showCard(currentCard);
+      }
+    }
+
+    // Tap/click to advance (except on final card)
+    sequence.addEventListener('click', (e) => {
+      // Don't advance if clicking the final button
+      if (e.target.closest('.final-button')) return;
+      // Don't advance if on final card
+      if (currentCard >= totalCards - 1) return;
+      nextCard();
+    });
+
+    // Keyboard support for testing
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'ArrowRight') {
+        if (currentCard < totalCards - 1) {
+          nextCard();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
