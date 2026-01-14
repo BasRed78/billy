@@ -138,31 +138,6 @@
       margin-bottom: 0;
     }
 
-    .screenshot {
-      width: 280px;
-      height: 500px;
-      background: white;
-      border-radius: 32px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
-      margin: 24px 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 8px solid #2C2C2C;
-      overflow: hidden;
-    }
-
-    .screenshot img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .screenshot-placeholder {
-      color: #999;
-      font-size: 14px;
-    }
-
     .nav {
       padding: 20px;
       display: flex;
@@ -256,13 +231,89 @@
       margin: 0;
     }
 
+    /* New styles for jokes and history */
+    .joke-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 32px;
+      margin: 20px 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      max-width: 440px;
+      text-align: left;
+    }
+
+    .joke-setup {
+      font-size: 18px;
+      color: #2C2C2C;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .joke-punchline {
+      font-size: 18px;
+      color: #B8354A;
+      font-weight: 700;
+    }
+
+    .joke-types {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .joke-type {
+      background: white;
+      padding: 12px 20px;
+      border-radius: 100px;
+      font-size: 15px;
+      color: #6B6B6B;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .joke-type .icon {
+      font-size: 18px;
+    }
+
+    .history-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin: 12px 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      max-width: 480px;
+      text-align: left;
+      border-left: 4px solid #B8354A;
+    }
+
+    .history-card .era {
+      font-size: 13px;
+      color: #B8354A;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .history-card .fact {
+      font-size: 16px;
+      color: #2C2C2C;
+      line-height: 1.5;
+      margin: 0;
+    }
+
     @media (max-width: 600px) {
       h1 { font-size: 36px; }
       h2 { font-size: 24px; }
       p { font-size: 18px; }
       .logo { width: 100px; height: 100px; }
       .logo svg { width: 60px; height: 60px; }
-      .screenshot { width: 220px; height: 400px; }
+      .joke-card { padding: 20px 24px; }
+      .history-card { padding: 16px 20px; }
     }
   </style>
 </head>
@@ -273,6 +324,8 @@
     <div class="slide active" id="slide1">
       <div class="progress">
         <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
@@ -305,6 +358,8 @@
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
       </div>
       <h2>What is Billy?</h2>
       <p>Billy is a <span class="highlight">digital companion</span> — someone Dad can chat with anytime, about anything.</p>
@@ -317,6 +372,8 @@
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
@@ -337,6 +394,8 @@
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
@@ -388,6 +447,8 @@
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
       </div>
       <h2>Built-in smarts</h2>
       <div class="feature-list">
@@ -421,7 +482,7 @@
       </div>
     </div>
 
-    <!-- Slide 6: What can Billy do -->
+    <!-- NEW Slide 6: Jokes -->
     <div class="slide" id="slide6">
       <div class="progress">
         <div class="progress-dot"></div>
@@ -433,8 +494,66 @@
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
       </div>
-      <h2>What can Billy do?</h2>
+      <div class="emoji">😄</div>
+      <h2>Billy knows a few good ones</h2>
+      <p>Ask Billy for a joke anytime. He's got a collection ready to go.</p>
+      <div class="joke-card">
+        <div class="joke-setup">"I've got a great joke about construction..."</div>
+        <div class="joke-punchline">"...but I'm still working on it."</div>
+      </div>
+      <div class="joke-types">
+        <div class="joke-type"><span class="icon">🙄</span> Dad jokes</div>
+        <div class="joke-type"><span class="icon">🚪</span> Knock-knocks</div>
+        <div class="joke-type"><span class="icon">😏</span> Cheeky ones</div>
+      </div>
+    </div>
+
+    <!-- NEW Slide 7: Redhead History -->
+    <div class="slide" id="slide7">
+      <div class="progress">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <h2>The Redhead story</h2>
+      <p>Billy knows the history of our surname — Vikings, medieval records, the lot. Dad can explore where we came from.</p>
+      <div class="history-card">
+        <div class="era">1246 · Northumberland</div>
+        <div class="fact">Adam Redhed appears as a witness in the Assize Court Rolls — one of the earliest records of our name.</div>
+      </div>
+      <div class="history-card">
+        <div class="era">Viking Connection</div>
+        <div class="fact">The Old Norse word "Rauðhöfði" (red-head) was used in Iceland. As Vikings settled in England, the name translated directly.</div>
+      </div>
+    </div>
+
+    <!-- Slide 8: What can Billy do -->
+    <div class="slide" id="slide8">
+      <div class="progress">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <h2>What else can Billy do?</h2>
       <div class="feature-list">
         <div class="feature-item">
           <div class="feature-icon">
@@ -466,9 +585,11 @@
       </div>
     </div>
 
-    <!-- Slide 7: How to use it -->
-    <div class="slide" id="slide7">
+    <!-- Slide 9: How to use it -->
+    <div class="slide" id="slide9">
       <div class="progress">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
@@ -489,9 +610,11 @@
       <p>Billy remembers their conversations, so they can pick up where they left off.</p>
     </div>
 
-    <!-- Slide 8: How you can help -->
-    <div class="slide" id="slide8">
+    <!-- Slide 10: How you can help -->
+    <div class="slide" id="slide10">
       <div class="progress">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
@@ -534,9 +657,11 @@
       </div>
     </div>
 
-    <!-- Slide 9: Final -->
-    <div class="slide" id="slide9">
+    <!-- Slide 11: Final -->
+    <div class="slide" id="slide11">
       <div class="progress">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
         <div class="progress-dot"></div>
@@ -555,7 +680,7 @@
         </svg>
       </div>
       <h2>That's Billy</h2>
-      <p>A companion for Dad. Private, patient, always there.</p>
+      <p>A companion for Dad. Private, patient, always there — now with jokes and family history to explore.</p>
       <a href="https://billy2025.vercel.app/" target="_blank" style="display: inline-block; margin-top: 24px; padding: 16px 32px; background: #B8354A; color: white; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 18px;">Open Billy →</a>
       <p style="margin-top: 24px; font-size: 16px; color: #999;">Made with love by Bas ❤️</p>
     </div>
@@ -569,7 +694,7 @@
 
   <script>
     let currentSlide = 1;
-    const totalSlides = 9;
+    const totalSlides = 11;
     
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
